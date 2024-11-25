@@ -35,3 +35,15 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Mac OS ###
+.DS_Store
+
+### Confidential Information ###
+.env
+.env.*
+!.env.example
+
+### Docker Database ###
+/mariadb_data/
+/grafana_data/
