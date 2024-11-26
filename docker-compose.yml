@@ -3,18 +3,18 @@ version: '3.8'
 services:
   trod-db:
     image: mariadb:10.5
-    container_name: spring-boot-db
+    container_name: trod-db
     environment:
-      - MARIADB_ROOT_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
       - MARIADB_DATABASE=${SPRING_DATASOURCE_DATABASE}
+      - MARIADB_ROOT_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
     ports:
       - "3306:3306"
     volumes:
       - ./mariadb_data:/var/lib/mysql
 
-  spring-boot-cadvisor:
+  trod-cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
-    container_name: spring-boot-cadvisor
+    container_name: trod-cadvisor
     ports:
       - "8080:8080"
     volumes:
@@ -23,9 +23,9 @@ services:
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
 
-  spring-boot-prometheus:
+  trod-prometheus:
     image: prom/prometheus:latest
-    container_name: spring-boot-prometheus
+    container_name: trod-prometheus
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     command:
@@ -33,11 +33,11 @@ services:
     ports:
       - "9090:9090"
     depends_on:
-      - spring-boot-cadvisor
+      - trod-cadvisor
 
-  spring-boot-grafana:
+  trod-grafana:
     image: grafana/grafana:latest
-    container_name: spring-boot-grafana
+    container_name: trod-grafana
     ports:
       - "3000:3000"
     volumes:
