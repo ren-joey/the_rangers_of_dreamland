@@ -10,10 +10,16 @@ public interface UserMapper {
     @Select("SELECT * FROM user WHERE id = #{id}")
     User findById(@Param("id") Long id);
 
+    @Select("SELECT * FROM user WHERE email = #{email}")
+    User findByEmail(@Param("email") String email);
+
+    @Select("SELECT * FROM user WHERE username = #{username}")
+    User findByUsername(@Param("username") String username);
+
     @Select("SELECT * FROM user")
     List<User> findAll();
 
-    @Insert("INSERT INTO user(username, email) VALUES(#{username}, #{email})")
+    @Insert("INSERT INTO user(username, email, password) VALUES(#{username}, #{email}, #{password})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insert(User user);
 
