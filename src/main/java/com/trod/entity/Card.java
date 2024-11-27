@@ -17,4 +17,12 @@ public class Card {
 
     @Column(nullable = false)
     private String description;
+
+    @Column(nullable = false)
+    private Integer health;
+
+    @Column(nullable = false)
+    private Integer cost;
+
+
 }
