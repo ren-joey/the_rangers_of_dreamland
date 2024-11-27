@@ -1,5 +1,6 @@
 package com.trod.entity;
 
+import com.trod.constant.Rarity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +13,10 @@ public class Card {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Rarity rarity;
+
     @Column(nullable = false, unique = true)
     private String name;
 
@@ -23,6 +28,5 @@ public class Card {
 
     @Column(nullable = false)
     private Integer cost;
-
 
 }
