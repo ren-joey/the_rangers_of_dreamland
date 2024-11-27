@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class DotenvPostProcessor {
+
     public static void loadEnv() {
         Set<String> shouldExistKeys = new HashSet<>();
         Dotenv keys = Dotenv.configure().filename(".env.example").load();

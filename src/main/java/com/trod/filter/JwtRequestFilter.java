@@ -22,7 +22,6 @@ import java.util.ArrayList;
 public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-    private static final Dotenv dotenv = Dotenv.load();
 
     public JwtRequestFilter(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
@@ -68,7 +67,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private String extractJwtFromCookie(HttpServletRequest request) {
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
-                if (cookie.getName().equals(dotenv.get("JWT_KEY_NAME"))) {
+                if (cookie.getName().equals(System.getProperty("JWT_KEY_NAME"))) {
                     return cookie.getValue();
                 }
             }
