@@ -1,5 +1,6 @@
 package com.trod.security;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ClaimsBuilder;
 import io.jsonwebtoken.Jwts;
@@ -33,7 +34,7 @@ public class JwtUtil {
 
     public String generateToken(String username) {
         // 1 day in milliseconds
-        long EXPIRATION_TIME = 86400000;
+        long EXPIRATION_TIME = Long.parseLong(System.getProperty("JWT_EXPIRATION_TIME"));
 
         ClaimsBuilder claims = Jwts.claims();
         claims.add("sub", username);

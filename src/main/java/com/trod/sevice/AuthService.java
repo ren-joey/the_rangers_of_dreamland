@@ -18,7 +18,6 @@ public class AuthService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
-    private static final Dotenv dotenv = Dotenv.load();
 
     public AuthService(UserMapper userMapper, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
         this.userMapper = userMapper;
@@ -53,7 +52,7 @@ public class AuthService {
     }
 
     public void addJwtToCookie(HttpServletResponse response, String jwt) {
-        Cookie cookie = new Cookie(dotenv.get("JWT_KEY_NAME"), jwt);
+        Cookie cookie = new Cookie(System.getProperty("JWT_KEY_NAME"), jwt);
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/");
