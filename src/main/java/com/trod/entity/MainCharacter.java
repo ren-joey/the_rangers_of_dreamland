@@ -9,7 +9,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MainCharacter extends CostUnit {
-
     @Column(nullable = false)
     private Integer health;
 
