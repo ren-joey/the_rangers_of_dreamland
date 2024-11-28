@@ -5,10 +5,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+@MappedSuperclass
 @Getter
 @Setter
-@Entity
-public class Card {
+public abstract class Unit {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
@@ -22,11 +22,4 @@ public class Card {
 
     @Column(nullable = false)
     private String description;
-
-    @Column(nullable = false)
-    private Integer health;
-
-    @Column(nullable = false)
-    private Integer cost;
-
 }
