@@ -1,4 +1,4 @@
-package com.trod.entity;
+package com.trod.entity.abstractentity;
 
 import com.trod.constant.Rarity;
 import jakarta.persistence.*;
@@ -8,11 +8,7 @@ import lombok.Setter;
 @MappedSuperclass
 @Getter
 @Setter
-public abstract class Unit {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
-
+public abstract class Unit extends UUIDEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Rarity rarity;

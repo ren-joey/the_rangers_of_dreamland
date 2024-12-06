@@ -1,5 +1,6 @@
 package com.trod.entity;
 
+import com.trod.entity.abstractentity.CostUnit;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.Getter;

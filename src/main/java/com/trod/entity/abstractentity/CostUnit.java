@@ -1,4 +1,4 @@
-package com.trod.entity;
+package com.trod.entity.abstractentity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;

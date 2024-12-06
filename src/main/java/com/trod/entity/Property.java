@@ -1,22 +1,17 @@
 package com.trod.entity;
 
 import com.trod.constant.PropertyType;
+import com.trod.entity.abstractentity.IdentityEntity;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Getter
 @Setter
-public class Property {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
-
+public class Property extends IdentityEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PropertyType propertyType;

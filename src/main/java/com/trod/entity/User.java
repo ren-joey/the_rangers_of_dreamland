@@ -1,5 +1,6 @@
 package com.trod.entity;
 
+import com.trod.entity.abstractentity.IdentityEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,11 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class User extends IdentityEntity {
     @Column(nullable = false)
     private String username;
 
