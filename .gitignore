@@ -45,5 +45,4 @@ out/
 !.env.example
 
 ### Docker Database ###
-/mariadb_data/
-/grafana_data/
+/docker_data/**

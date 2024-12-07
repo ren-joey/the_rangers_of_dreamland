@@ -10,7 +10,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./mariadb_data:/var/lib/mysql
+      - ./docker_data/mariadb_data:/var/lib/mysql
 
   trod-cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
@@ -41,5 +41,46 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./grafana_data:/var/lib/grafana
+      - ./docker_data/grafana_data:/var/lib/grafana
 
+  trod-postfix:
+    image: boky/postfix
+    container_name: trod-postfix
+    hostname: mail.example.com
+    environment:
+      - MAILNAME=example.com
+      - RELAYHOST=
+      - MYNETWORKS=127.0.0.0/8
+      - ROOT_ALIAS=root@example.com
+      - SMTP_USERNAME=your_username
+      - SMTP_PASSWORD=your_password
+      - USE_TLS=yes
+      - ALLOWED_SENDER_DOMAINS=example.com
+    ports:
+      - "25:25"
+      - "587:587"
+    volumes:
+      - ./docker_data/postfix_data:/var/spool/postfix
+      - ./docker_data/postfix_logs:/var/log/mail
+
+  trod-dovecot:
+    image: tvial/docker-mailserver
+    container_name: trod-dovecot
+    hostname: mail.example.com
+    environment:
+      - DMS_DEBUG=0
+      - ENABLE_SPAMASSASSIN=0
+      - ENABLE_CLAMAV=0
+      - ENABLE_FAIL2BAN=0
+      - ENABLE_POSTGREY=0
+      - ONE_DIR=1
+      - SSL_TYPE=letsencrypt
+    volumes:
+      - ./docker_data/maildata:/var/mail
+      - ./docker_data/mailstate:/var/mail-state
+      - ./docker_data/mailconfig:/tmp/docker-mailserver
+    ports:
+      - "143:143" # IMAP
+      - "993:993" # IMAPS
+      - "110:110" # POP3
+      - "995:995" # POP3S
