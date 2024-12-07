@@ -3,11 +3,10 @@ package com.trod.controller;
 import com.trod.dto.LoginRequestDto;
 import com.trod.dto.RegisterRequestDto;
 import com.trod.dto.UserResponseDto;
-import com.trod.sevice.AuthService;
+import com.trod.service.AuthService;
 import jakarta.security.auth.message.AuthException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 

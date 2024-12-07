@@ -2,10 +2,12 @@ package com.trod.controller;
 
 import com.trod.entity.User;
 import com.trod.service.UserService;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Profile("dev")
 @RestController
 @RequestMapping("/users")
 public class UserController {

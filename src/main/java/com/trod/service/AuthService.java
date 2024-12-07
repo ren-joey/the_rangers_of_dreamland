@@ -1,4 +1,4 @@
-package com.trod.sevice;
+package com.trod.service;
 
 import com.trod.dto.LoginRequestDto;
 import com.trod.dto.RegisterRequestDto;
@@ -6,7 +6,6 @@ import com.trod.dto.UserResponseDto;
 import com.trod.entity.User;
 import com.trod.mapper.UserMapper;
 import com.trod.security.JwtUtil;
-import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,23 +25,23 @@ public class AuthService {
     }
 
     public User register(RegisterRequestDto registerRequest) {
-        if (userMapper.findByEmail(registerRequest.getEmail()) != null) {
+        if (userMapper.findByEmail(registerRequest.email()) != null) {
             throw new RuntimeException("Email already exists");
         }
 
         User user = new User();
-        user.setUsername(registerRequest.getUsername());
-        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setEmail(registerRequest.getEmail());
+        user.setUsername(registerRequest.username());
+        user.setPassword(passwordEncoder.encode(registerRequest.password()));
+        user.setEmail(registerRequest.email());
         userMapper.insert(user);
 
         return user;
     }
 
     public void login(LoginRequestDto loginRequest, HttpServletResponse response) {
-        User user = userMapper.findByUsername(loginRequest.getUsername());
+        User user = userMapper.findByUsername(loginRequest.username());
         if (user == null) throw new RuntimeException("User not found");
-        if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+        if (passwordEncoder.matches(loginRequest.password(), user.getPassword())) {
             String token = jwtUtil.generateToken(user.getUsername());
             addJwtToCookie(response, token);
             response.setStatus(HttpServletResponse.SC_ACCEPTED);
