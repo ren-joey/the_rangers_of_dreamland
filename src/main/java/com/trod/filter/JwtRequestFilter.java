@@ -1,7 +1,6 @@
 package com.trod.filter;
 
 import com.trod.security.JwtUtil;
-import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -34,7 +33,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             @NonNull FilterChain chain
     ) throws ServletException, IOException {
         String jwt = extractJwtFromCookie(request);
-        String username = null;
+        String username;
 
         if (jwt != null) {
             try {
