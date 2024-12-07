@@ -42,7 +42,7 @@ public class AuthController {
     }
 
     @GetMapping("/checkLogin")
-    public Map<String, String> checkLogin () throws AuthException, IOException {
+    public Map<String, String> checkLogin () {
         Map<String, String> map = new HashMap<>();
         var authentication = SecurityContextHolder.getContext().getAuthentication();
 
