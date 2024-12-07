@@ -4,30 +4,23 @@ import com.trod.dto.LoginRequestDto;
 import com.trod.dto.RegisterRequestDto;
 import com.trod.dto.UserResponseDto;
 import com.trod.service.AuthService;
-import jakarta.security.auth.message.AuthException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class AuthController {
 
     private final AuthService authService;
     private final HttpServletResponse response;
-
-    public AuthController(
-            HttpServletResponse response,
-            AuthService authService
-    ) {
-        this.authService = authService;
-        this.response = response;
-    }
 
     @PostMapping("/register")
     public UserResponseDto register(@Valid @RequestBody RegisterRequestDto registerRequest) {
@@ -41,6 +34,7 @@ public class AuthController {
         authService.login(loginRequest, response);
     }
 
+    @Profile("dev")
     @GetMapping("/checkLogin")
     public Map<String, String> checkLogin () {
         Map<String, String> map = new HashMap<>();
