@@ -17,4 +17,7 @@ public class User extends IdentityEntity {
 
     @Column(nullable = false, unique = true)
     private String email;
+
+    @OneToOne(mappedBy = "user")
+    private GameRole gameRole;
 }

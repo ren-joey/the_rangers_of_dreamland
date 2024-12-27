@@ -1,5 +1,6 @@
 package com.trod.service;
 
+import com.trod.constant.RoleEnum;
 import com.trod.dto.LoginRequestDto;
 import com.trod.dto.RegisterRequestDto;
 import com.trod.dto.UserResponseDto;
@@ -8,6 +9,8 @@ import com.trod.mapper.UserMapper;
 import com.trod.security.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -65,5 +68,17 @@ public class AuthService {
                 user.getUsername(),
                 user.getEmail()
         );
+    }
+
+    public User checkPermission(RoleEnum requiredRole) {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication.getPrincipal() == null) {
+            throw new InsufficientAuthenticationException("User not authenticated");
+        }
+        var user = userMapper.findByUsername(authentication.getPrincipal().toString());
+        if (user.getGameRole().getRoleEnum().getIndex() < requiredRole.getIndex()) {
+            throw new InsufficientAuthenticationException("User not authorized");
+        }
+        return user;
     }
 }

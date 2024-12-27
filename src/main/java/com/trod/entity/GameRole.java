@@ -1,5 +1,6 @@
 package com.trod.entity;
 
+import com.trod.constant.RoleEnum;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +15,7 @@ public class GameRole {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private com.trod.constant.Role role;
+    private RoleEnum roleEnum;
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
