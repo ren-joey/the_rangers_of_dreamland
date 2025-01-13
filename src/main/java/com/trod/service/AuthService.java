@@ -4,6 +4,7 @@ import com.trod.constant.RoleEnum;
 import com.trod.dto.LoginRequestDto;
 import com.trod.dto.RegisterRequestDto;
 import com.trod.dto.UserResponseDto;
+import com.trod.entity.GameRole;
 import com.trod.entity.User;
 import com.trod.mapper.UserMapper;
 import com.trod.security.JwtUtil;
@@ -32,10 +33,18 @@ public class AuthService {
             throw new RuntimeException("Email already exists");
         }
 
+        if (registerRequest.role().getIndex() > 0) {
+            checkPermission(RoleEnum.fromIndex(registerRequest.role().getIndex() + 1));
+        }
+
         User user = new User();
         user.setUsername(registerRequest.username());
         user.setPassword(passwordEncoder.encode(registerRequest.password()));
         user.setEmail(registerRequest.email());
+        GameRole gameRole = new GameRole();
+        gameRole.setRoleEnum(registerRequest.role());
+        gameRole.setUser(user);
+        user.setGameRole(gameRole);
         userMapper.insert(user);
 
         return user;
@@ -66,7 +75,8 @@ public class AuthService {
         return new UserResponseDto(
                 user.getId(),
                 user.getUsername(),
-                user.getEmail()
+                user.getEmail(),
+                user.getGameRole().getRoleEnum()
         );
     }
 

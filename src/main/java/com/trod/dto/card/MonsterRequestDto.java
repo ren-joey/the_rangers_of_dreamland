@@ -1,18 +1,11 @@
 package com.trod.dto.card;
 
 import com.trod.constant.RarityEnum;
-import com.trod.entity.Monster;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import java.math.BigDecimal;
-import lombok.Getter;
-import lombok.Setter;
 
-
-@Getter
-@Setter
 public record MonsterRequestDto (
         @NotBlank(message = "Name is required")
         @Size(min = 3, max = 20, message = "Name must be between 3 and 20 characters")
