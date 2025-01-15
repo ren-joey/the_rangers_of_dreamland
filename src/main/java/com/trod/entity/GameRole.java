@@ -15,7 +15,7 @@ public class GameRole {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private RoleEnum roleEnum;
+    private RoleEnum role;
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)

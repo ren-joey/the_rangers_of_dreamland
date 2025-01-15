@@ -20,12 +20,7 @@ public interface UserMapper {
     List<User> findAll();
 
     // FIXME: SQL SYNTAX ERROR
-    @Insert({
-            "<script>",
-            "INSERT INTO user(username, email, password) VALUES(#{username}, #{email}, #{password})",
-            "INSERT INTO game_role(role_enum, user_id) VALUES(#{gameRole.roleEnum}, LAST_INSERT_ID())",
-            "</script>"
-    })
+    @Insert("INSERT INTO user(username, email, password) VALUES(#{username}, #{email}, #{password})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insert(User user);
 

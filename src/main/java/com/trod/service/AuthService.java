@@ -6,6 +6,7 @@ import com.trod.dto.RegisterRequestDto;
 import com.trod.dto.UserResponseDto;
 import com.trod.entity.GameRole;
 import com.trod.entity.User;
+import com.trod.mapper.GameRoleMapper;
 import com.trod.mapper.UserMapper;
 import com.trod.security.JwtUtil;
 import jakarta.servlet.http.Cookie;
@@ -14,6 +15,7 @@ import org.springframework.security.authentication.InsufficientAuthenticationExc
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthService {
@@ -21,13 +23,16 @@ public class AuthService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final GameRoleMapper gameRoleMapper;
 
-    public AuthService(UserMapper userMapper, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
+    public AuthService(UserMapper userMapper, PasswordEncoder passwordEncoder, JwtUtil jwtUtil, GameRoleMapper gameRoleMapper) {
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
+        this.gameRoleMapper = gameRoleMapper;
     }
 
+    @Transactional
     public User register(RegisterRequestDto registerRequest) {
         if (userMapper.findByEmail(registerRequest.email()) != null) {
             throw new RuntimeException("Email already exists");
@@ -41,11 +46,13 @@ public class AuthService {
         user.setUsername(registerRequest.username());
         user.setPassword(passwordEncoder.encode(registerRequest.password()));
         user.setEmail(registerRequest.email());
+        userMapper.insert(user);
+
         GameRole gameRole = new GameRole();
-        gameRole.setRoleEnum(registerRequest.role());
+        gameRole.setRole(registerRequest.role());
         gameRole.setUser(user);
         user.setGameRole(gameRole);
-        userMapper.insert(user);
+        gameRoleMapper.insert(gameRole);
 
         return user;
     }
@@ -76,7 +83,7 @@ public class AuthService {
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
-                user.getGameRole().getRoleEnum()
+                user.getGameRole().getRole()
         );
     }
 
@@ -86,7 +93,7 @@ public class AuthService {
             throw new InsufficientAuthenticationException("User not authenticated");
         }
         var user = userMapper.findByUsername(authentication.getPrincipal().toString());
-        if (user.getGameRole().getRoleEnum().getIndex() < requiredRole.getIndex()) {
+        if (user.getGameRole().getRole().getIndex() < requiredRole.getIndex()) {
             throw new InsufficientAuthenticationException("User not authorized");
         }
         return user;
