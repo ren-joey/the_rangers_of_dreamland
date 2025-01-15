@@ -11,13 +11,17 @@ import com.trod.mapper.UserMapper;
 import com.trod.security.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
+@RequiredArgsConstructor
 public class AuthService {
 
     private final UserMapper userMapper;
@@ -25,11 +29,37 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final GameRoleMapper gameRoleMapper;
 
-    public AuthService(UserMapper userMapper, PasswordEncoder passwordEncoder, JwtUtil jwtUtil, GameRoleMapper gameRoleMapper) {
-        this.userMapper = userMapper;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtUtil = jwtUtil;
-        this.gameRoleMapper = gameRoleMapper;
+    public User getUserById(Long id) {
+        User user = userMapper.findById(id);
+        if (user == null) throw new RuntimeException("User not found");
+        return user;
+    }
+
+    public List<User> getAllUsers() {
+        return userMapper.findAll();
+    }
+
+    public void updateUser(Long id, RegisterRequestDto registerRequestDto) {
+        User user = getUserById(id);
+        if (user == null)
+            throw new RuntimeException("User not found");
+        if (registerRequestDto.username() != null)
+            user.setUsername(registerRequestDto.username());
+        if (registerRequestDto.password() != null)
+            user.setPassword(passwordEncoder.encode(registerRequestDto.password()));
+        if (registerRequestDto.email() != null)
+            user.setEmail(registerRequestDto.email());
+        userMapper.update(user);
+
+        if (registerRequestDto.role() != null) {
+            GameRole gameRole = user.getGameRole();
+            gameRole.setRole(registerRequestDto.role());
+            gameRoleMapper.update(gameRole);
+        }
+    }
+
+    public void deleteUser(Long id) {
+        userMapper.deleteById(id);
     }
 
     @Transactional
