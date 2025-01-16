@@ -12,6 +12,7 @@ import com.trod.security.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,9 +31,8 @@ public class AuthService {
     private final GameRoleMapper gameRoleMapper;
 
     public User getUserById(Long id) {
-        User user = userMapper.findById(id);
-        if (user == null) throw new RuntimeException("User not found");
-        return user;
+        return userMapper.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     public List<User> getAllUsers() {
@@ -64,7 +64,7 @@ public class AuthService {
 
     @Transactional
     public User register(RegisterRequestDto registerRequest) {
-        if (userMapper.findByEmail(registerRequest.email()) != null) {
+        if (userMapper.findByEmail(registerRequest.email()).isPresent()) {
             throw new RuntimeException("Email already exists");
         }
 
@@ -88,8 +88,8 @@ public class AuthService {
     }
 
     public void login(LoginRequestDto loginRequest, HttpServletResponse response) {
-        User user = userMapper.findByUsername(loginRequest.username());
-        if (user == null) throw new RuntimeException("User not found");
+        User user = userMapper.findByUsername(loginRequest.username())
+                .orElseThrow(() -> new RuntimeException("User not found"));
         if (passwordEncoder.matches(loginRequest.password(), user.getPassword())) {
             String token = jwtUtil.generateToken(user.getUsername());
             addJwtToCookie(response, token);
@@ -122,7 +122,8 @@ public class AuthService {
         if (authentication == null || authentication.getPrincipal() == null) {
             throw new InsufficientAuthenticationException("User not authenticated");
         }
-        var user = userMapper.findByUsername(authentication.getPrincipal().toString());
+        var user = userMapper.findByUsername(authentication.getPrincipal().toString())
+                .orElseThrow(() -> new AuthenticationCredentialsNotFoundException("User not found"));
         if (user.getGameRole().getRole().getIndex() < requiredRole.getIndex()) {
             throw new InsufficientAuthenticationException("User not authorized");
         }

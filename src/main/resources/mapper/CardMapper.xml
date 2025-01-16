@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trod.mapper.CardMapper">
+    <insert id="insertMonsterCard" parameterType="com.trod.entity.Monster">
+        INSERT INTO monster
+            (
+             name,
+             attack,
+             defense,
+             level,
+             type,
+             attribute,
+             description
+            )
+        VALUES
+            (
+             #{name},
+             #{attack},
+             #{defense},
+             #{level},
+             #{type},
+             #{attribute},
+             #{description}
+            )
+    </insert>
+</mapper>

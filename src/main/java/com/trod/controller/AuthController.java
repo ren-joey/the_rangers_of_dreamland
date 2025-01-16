@@ -1,9 +1,9 @@
 package com.trod.controller;
 
+import com.trod.constant.RoleEnum;
 import com.trod.dto.LoginRequestDto;
 import com.trod.dto.RegisterRequestDto;
 import com.trod.dto.UserResponseDto;
-import com.trod.entity.User;
 import com.trod.service.AuthService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/auth")
@@ -26,24 +27,31 @@ public class AuthController {
 
     @GetMapping("/users/{id}")
     public UserResponseDto getUserById(@PathVariable Long id) {
+        authService.checkPermission(RoleEnum.GAME_MASTER);
         return UserResponseDto.convert(
                 authService.getUserById(id)
         );
     }
 
     @GetMapping("/users")
-    public List<User> getAllUsers() {
-        return authService.getAllUsers();
+    public List<UserResponseDto> getAllUsers() {
+        authService.checkPermission(RoleEnum.GAME_MASTER);
+        return authService.getAllUsers()
+                .stream()
+                .map(UserResponseDto::convert)
+                .collect(Collectors.toList());
     }
 
     @PutMapping("/users/{id}")
     public String updateUser(@PathVariable Long id, @RequestBody RegisterRequestDto registerRequestDto) {
+        authService.checkPermission(RoleEnum.ADMIN);
         authService.updateUser(id, registerRequestDto);
         return "User updated successfully!";
     }
 
     @DeleteMapping("/users/{id}")
     public String deleteUser(@PathVariable Long id) {
+        authService.checkPermission(RoleEnum.ADMIN);
         authService.deleteUser(id);
         return "User deleted successfully!";
     }
