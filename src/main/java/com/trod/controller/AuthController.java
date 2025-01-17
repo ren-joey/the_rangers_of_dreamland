@@ -4,15 +4,14 @@ import com.trod.constant.RoleEnum;
 import com.trod.dto.LoginRequestDto;
 import com.trod.dto.RegisterRequestDto;
 import com.trod.dto.UserResponseDto;
+import com.trod.entity.User;
 import com.trod.service.AuthService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -44,14 +43,12 @@ public class AuthController {
 
     @PutMapping("/users/{id}")
     public String updateUser(@PathVariable Long id, @RequestBody RegisterRequestDto registerRequestDto) {
-        authService.checkPermission(RoleEnum.ADMIN);
         authService.updateUser(id, registerRequestDto);
         return "User updated successfully!";
     }
 
     @DeleteMapping("/users/{id}")
     public String deleteUser(@PathVariable Long id) {
-        authService.checkPermission(RoleEnum.ADMIN);
         authService.deleteUser(id);
         return "User deleted successfully!";
     }
@@ -68,33 +65,20 @@ public class AuthController {
         authService.login(loginRequest, response);
     }
 
-    @Profile("dev")
-    @GetMapping("/checkLogin")
-    public Map<String, String> checkLogin () {
-        Map<String, String> map = new HashMap<>();
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
+    @GetMapping("/logout")
+    public void logout() {
+        authService.logout(response);
+    }
 
-        if (authentication == null || authentication.getPrincipal() == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        } else {
-            map.put(
-                    "getName()",
-                    SecurityContextHolder.getContext().getAuthentication().getName()
-            );
-            map.put(
-                    "getPrincipal()",
-                    SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString()
-            );
-            map.put(
-                    "getAuthorities()",
-                    SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString()
-            );
-            map.put(
-                    "getDetails()",
-                    SecurityContextHolder.getContext().getAuthentication().getDetails().toString()
-            );
-            response.setStatus(HttpServletResponse.SC_ACCEPTED);
-        }
-        return map;
+    @Profile("dev")
+    @GetMapping("/checkJwtPayload")
+    public Map<String, String> checkLogin () {
+        return authService.checkJwtPayloadFromCookie();
+    }
+
+    @Profile("dev")
+    @GetMapping("/checkLoggedInUser")
+    public User checkLoggedInUser() {
+        return authService.getLoggedInUserThrowable();
     }
 }

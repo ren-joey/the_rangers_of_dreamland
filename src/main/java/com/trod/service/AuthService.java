@@ -19,7 +19,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +43,8 @@ public class AuthService {
     }
 
     public void updateUser(Long id, RegisterRequestDto registerRequestDto) {
+        User loggedUser = checkPermission(RoleEnum.PLAYER);
+
         User user = getUserById(id);
         if (user == null)
             throw new RuntimeException("User not found");
@@ -59,6 +64,7 @@ public class AuthService {
     }
 
     public void deleteUser(Long id) {
+        checkPermission(RoleEnum.ADMIN);
         userMapper.deleteById(id);
     }
 
@@ -99,6 +105,19 @@ public class AuthService {
         }
     }
 
+    public void logout(HttpServletResponse response) {
+        Optional<User> user = getLoggedInUser();
+        if (user.isEmpty()) {
+            throw new AuthenticationCredentialsNotFoundException("You are not logged in");
+        }
+        Cookie cookie = new Cookie(System.getProperty("JWT_KEY_NAME"), "");
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+    }
+
     public void addJwtToCookie(HttpServletResponse response, String jwt) {
         Cookie cookie = new Cookie(System.getProperty("JWT_KEY_NAME"), jwt);
         cookie.setHttpOnly(true);
@@ -117,16 +136,56 @@ public class AuthService {
         );
     }
 
-    public User checkPermission(RoleEnum requiredRole) {
+    public Optional<User> getLoggedInUser() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || authentication.getPrincipal() == null) {
-            throw new InsufficientAuthenticationException("User not authenticated");
+            return Optional.empty();
         }
-        var user = userMapper.findByUsername(authentication.getPrincipal().toString())
+        return userMapper.findByUsername(authentication.getPrincipal().toString());
+    }
+
+    public User getLoggedInUserThrowable() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication.getPrincipal() == null) {
+            throw new InsufficientAuthenticationException("You are not logged in");
+        }
+        return userMapper.findByUsername(authentication.getPrincipal().toString())
                 .orElseThrow(() -> new AuthenticationCredentialsNotFoundException("User not found"));
+    }
+
+    public User checkPermission(RoleEnum requiredRole) {
+        User user = getLoggedInUserThrowable();
         if (user.getGameRole().getRole().getIndex() < requiredRole.getIndex()) {
             throw new InsufficientAuthenticationException("User not authorized");
         }
         return user;
     }
+
+    public Map<String, String> checkJwtPayloadFromCookie() {
+        Map<String, String> map = new HashMap<>();
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || authentication.getPrincipal() == null) {
+            throw new InsufficientAuthenticationException("User not authorized");
+        } else {
+            map.put(
+                    "getName()",
+                    SecurityContextHolder.getContext().getAuthentication().getName()
+            );
+            map.put(
+                    "getPrincipal()",
+                    SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString()
+            );
+            map.put(
+                    "getAuthorities()",
+                    SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString()
+            );
+            map.put(
+                    "getDetails()",
+                    SecurityContextHolder.getContext().getAuthentication().getDetails().toString()
+            );
+        }
+        return map;
+    }
+
 }
