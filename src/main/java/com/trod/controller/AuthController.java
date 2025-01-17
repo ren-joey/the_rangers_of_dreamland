@@ -55,14 +55,16 @@ public class AuthController {
 
     @PostMapping("/register")
     public UserResponseDto register(@Valid @RequestBody RegisterRequestDto registerRequest) {
-        return authService.convertToDto(
+        return UserResponseDto.convert(
                 authService.register(registerRequest)
         );
     }
 
     @PostMapping("/login")
-    public void login(@Valid @RequestBody LoginRequestDto loginRequest) {
-        authService.login(loginRequest, response);
+    public UserResponseDto login(@Valid @RequestBody LoginRequestDto loginRequest) {
+        return UserResponseDto.convert(
+                authService.login(loginRequest, response)
+        );
     }
 
     @GetMapping("/logout")

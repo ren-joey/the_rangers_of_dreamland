@@ -93,13 +93,14 @@ public class AuthService {
         return user;
     }
 
-    public void login(LoginRequestDto loginRequest, HttpServletResponse response) {
+    public User login(LoginRequestDto loginRequest, HttpServletResponse response) {
         User user = userMapper.findByUsername(loginRequest.username())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         if (passwordEncoder.matches(loginRequest.password(), user.getPassword())) {
             String token = jwtUtil.generateToken(user.getUsername());
             addJwtToCookie(response, token);
             response.setStatus(HttpServletResponse.SC_ACCEPTED);
+            return user;
         } else {
             throw new RuntimeException("Invalid credentials");
         }
@@ -125,15 +126,6 @@ public class AuthService {
         cookie.setPath("/");
         cookie.setMaxAge(7 * 24 * 60 * 60);
         response.addCookie(cookie);
-    }
-
-    public UserResponseDto convertToDto(User user) {
-        return new UserResponseDto(
-                user.getId(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getGameRole().getRole()
-        );
     }
 
     public Optional<User> getLoggedInUser() {

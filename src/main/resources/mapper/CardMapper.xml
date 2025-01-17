@@ -24,4 +24,29 @@
              #{description}
             )
     </insert>
+
+    <insert id="insertMainCharacter" parameterType="com.trod.entity.MainCharacter">
+        INSERT INTO main_character
+            (
+             name,
+             rarity,
+             description,
+             cost,
+             health,
+             mana,
+             created_time,
+             created_user_id
+            )
+        VALUES
+            (
+             #{name},
+             #{rarity},
+             #{description},
+             #{cost},
+             #{health},
+             #{mana},
+             <include refid="com.trod.mapper.Common.currentWithMilliSeconds"/>,
+             #{user.id}
+            )
+    </insert>
 </mapper>

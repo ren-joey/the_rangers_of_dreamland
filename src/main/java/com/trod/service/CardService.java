@@ -1,6 +1,8 @@
 package com.trod.service;
 
 import com.trod.dto.card.MonsterRequestDto;
+import com.trod.dto.main.character.MainCharacterRequestDto;
+import com.trod.entity.MainCharacter;
 import com.trod.entity.Monster;
 import com.trod.entity.User;
 import com.trod.mapper.CardMapper;
@@ -16,7 +18,7 @@ public class CardService {
     public Monster createMonster(MonsterRequestDto monsterRequestDto, User user) {
         Monster monster = new Monster();
         monster.setName(monsterRequestDto.name());
-        monster.setRarityEnum(monsterRequestDto.rarityEnum());
+        monster.setRarity(monsterRequestDto.rarityEnum());
         monster.setDescription(monsterRequestDto.description());
         monster.setCost(monsterRequestDto.cost());
         monster.setHealth(monsterRequestDto.health());
@@ -27,5 +29,19 @@ public class CardService {
         monster.setCreatedTime(System.currentTimeMillis());
         cardMapper.insertMonsterCard(monster);
         return monster;
+    }
+
+    public MainCharacter createMainCharacter(MainCharacterRequestDto mainCharacterRequestDto, User user) {
+        MainCharacter mainCharacter = new MainCharacter();
+        mainCharacter.setName(mainCharacterRequestDto.name());
+        mainCharacter.setRarity(mainCharacterRequestDto.rarity());
+        mainCharacter.setDescription(mainCharacterRequestDto.description());
+        mainCharacter.setCost(mainCharacterRequestDto.cost());
+        mainCharacter.setHealth(mainCharacterRequestDto.health());
+        mainCharacter.setMana(mainCharacterRequestDto.mana());
+        mainCharacter.setCreatedUser(user);
+        mainCharacter.setCreatedTime(System.currentTimeMillis());
+        cardMapper.insertMainCharacter(mainCharacter);
+        return mainCharacter;
     }
 }

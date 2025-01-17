@@ -5,7 +5,7 @@ import com.trod.entity.Monster;
 
 public record MonsterResponseDto (
         String id,
-        RarityEnum rarityEnum,
+        RarityEnum rarity,
         String name,
         String description,
         Integer cost,
@@ -14,10 +14,10 @@ public record MonsterResponseDto (
         Integer attack,
         Integer defense
 ) {
-    public static MonsterResponseDto convertToMonsterResponseDto(Monster monster) {
+    public static MonsterResponseDto convert(Monster monster) {
         return new MonsterResponseDto(
             monster.getId(),
-            monster.getRarityEnum(),
+            monster.getRarity(),
             monster.getName(),
             monster.getDescription(),
             monster.getCost(),

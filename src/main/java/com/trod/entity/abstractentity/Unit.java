@@ -11,7 +11,7 @@ import lombok.Setter;
 public abstract class Unit extends UUIDEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private RarityEnum rarityEnum;
+    private RarityEnum rarity;
 
     @Column(nullable = false, unique = true)
     private String name;
