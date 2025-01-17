@@ -33,14 +33,23 @@
 
     <insert id="insert" parameterType="com.trod.entity.User" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO user
-            (username, email, password)
+            (
+             uuid, username, email, password,
+             created_time,
+             updated_time
+            )
         VALUES
-            (#{username}, #{email}, #{password})
+            (
+             #{uuid}, #{username}, #{email}, #{password},
+             <include refid="com.trod.mapper.Common.currentWithMilliSeconds"/>,
+             <include refid="com.trod.mapper.Common.currentWithMilliSeconds"/>
+            )
     </insert>
 
     <update id="update" parameterType="com.trod.entity.User">
         UPDATE user
-        SET username = #{username}, email = #{email}
+        SET username = #{username}, email = #{email}, password = #{password},
+            updated_time = <include refid="com.trod.mapper.Common.currentWithMilliSeconds"/>
         WHERE id = #{id}
     </update>
 

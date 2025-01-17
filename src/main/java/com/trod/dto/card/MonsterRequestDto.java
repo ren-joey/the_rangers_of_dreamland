@@ -11,6 +11,8 @@ public record MonsterRequestDto (
         @Size(min = 3, max = 20, message = "Name must be between 3 and 20 characters")
         String name,
 
+        // TODO: 新增一個忘記是什麼的 column
+
         @NotBlank(message = "Description is required")
         @Size(min = 3, max = 1000, message = "Description must be between 3 and 100 characters")
         String description,

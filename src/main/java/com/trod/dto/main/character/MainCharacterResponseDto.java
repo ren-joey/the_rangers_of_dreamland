@@ -4,7 +4,8 @@ import com.trod.constant.RarityEnum;
 import com.trod.entity.MainCharacter;
 
 public record MainCharacterResponseDto (
-        String id,
+        Long id,
+        String uuid,
         String name,
         String description,
         RarityEnum rarity,
@@ -15,6 +16,7 @@ public record MainCharacterResponseDto (
     public static MainCharacterResponseDto convert(MainCharacter mainCharacter) {
         return new MainCharacterResponseDto(
             mainCharacter.getId(),
+            mainCharacter.getUuid(),
             mainCharacter.getName(),
             mainCharacter.getDescription(),
             mainCharacter.getRarity(),

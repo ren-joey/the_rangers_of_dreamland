@@ -9,6 +9,8 @@ import com.trod.mapper.CardMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class CardService {
@@ -40,7 +42,6 @@ public class CardService {
         mainCharacter.setHealth(mainCharacterRequestDto.health());
         mainCharacter.setMana(mainCharacterRequestDto.mana());
         mainCharacter.setCreatedUser(user);
-        mainCharacter.setCreatedTime(System.currentTimeMillis());
         cardMapper.insertMainCharacter(mainCharacter);
         return mainCharacter;
     }

@@ -12,6 +12,7 @@ import com.trod.security.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -43,11 +45,14 @@ public class AuthService {
     }
 
     public void updateUser(Long id, RegisterRequestDto registerRequestDto) {
-        User loggedUser = checkPermission(RoleEnum.PLAYER);
+        User loggedUser = getLoggedInUser()
+                .orElseThrow(() -> new InsufficientAuthenticationException("You are not logged in"));
 
         User user = getUserById(id);
-        if (user == null)
-            throw new RuntimeException("User not found");
+        if (loggedUser.getGameRole().getRole() != RoleEnum.ADMIN
+                || !loggedUser.getUuid().equals(user.getUuid())) {
+            throw new InsufficientAuthenticationException("You are not authorized to update this user");
+        }
         if (registerRequestDto.username() != null)
             user.setUsername(registerRequestDto.username());
         if (registerRequestDto.password() != null)

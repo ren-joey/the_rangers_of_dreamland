@@ -11,13 +11,14 @@ import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @MappedSuperclass
 @Getter
 @Setter
-public abstract class UUIDEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+public abstract class UUIDEntity extends IdentityEntity {
+    @Column(nullable = false, unique = true)
+    private String uuid;
 
     @Column(nullable = false)
     private Long createdTime;
@@ -32,4 +33,8 @@ public abstract class UUIDEntity {
     @ManyToOne
     @JoinColumn(name = "updated_user_id")
     private User updatedUser;
+
+    public UUIDEntity() {
+        this.uuid = UUID.randomUUID().toString();
+    }
 }

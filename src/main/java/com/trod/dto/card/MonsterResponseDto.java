@@ -4,7 +4,8 @@ import com.trod.constant.RarityEnum;
 import com.trod.entity.Monster;
 
 public record MonsterResponseDto (
-        String id,
+        Long id,
+        String uuid,
         RarityEnum rarity,
         String name,
         String description,
@@ -17,6 +18,7 @@ public record MonsterResponseDto (
     public static MonsterResponseDto convert(Monster monster) {
         return new MonsterResponseDto(
             monster.getId(),
+            monster.getUuid(),
             monster.getRarity(),
             monster.getName(),
             monster.getDescription(),
