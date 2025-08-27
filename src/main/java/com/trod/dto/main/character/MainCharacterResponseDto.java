@@ -1,6 +1,6 @@
 package com.trod.dto.main.character;
 
-import com.trod.constant.RarityEnum;
+import com.trod.enums.RarityEnum;
 import com.trod.entity.MainCharacter;
 
 public record MainCharacterResponseDto (

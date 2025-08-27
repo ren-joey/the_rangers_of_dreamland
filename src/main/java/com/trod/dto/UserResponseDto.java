@@ -1,7 +1,6 @@
 package com.trod.dto;
 
-import com.trod.constant.RoleEnum;
-import com.trod.entity.GameRole;
+import com.trod.enums.RoleEnum;
 import com.trod.entity.User;
 
 public record UserResponseDto (

@@ -1,4 +1,4 @@
-package com.trod.constant;
+package com.trod.enums;
 
 public enum RarityAbbreviationEnum {
     N(0),

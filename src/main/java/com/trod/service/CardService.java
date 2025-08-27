@@ -9,6 +9,7 @@ import com.trod.mapper.CardMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -16,6 +17,14 @@ import java.util.UUID;
 public class CardService {
 
     private final CardMapper cardMapper;
+
+    public Monster getMonster(String uuid) {
+        return cardMapper.getMonster(uuid);
+    }
+
+    public MainCharacter getMainCharacterById(String uuid) {
+        return cardMapper.getMainCharacter(uuid);
+    }
 
     public Monster createMonster(MonsterRequestDto monsterRequestDto, User user) {
         Monster monster = new Monster();
@@ -36,12 +45,20 @@ public class CardService {
     public MainCharacter createMainCharacter(MainCharacterRequestDto mainCharacterRequestDto, User user) {
         MainCharacter mainCharacter = new MainCharacter();
         mainCharacter.setName(mainCharacterRequestDto.name());
-        mainCharacter.setRarity(mainCharacterRequestDto.rarity());
         mainCharacter.setDescription(mainCharacterRequestDto.description());
         mainCharacter.setCost(mainCharacterRequestDto.cost());
         mainCharacter.setHealth(mainCharacterRequestDto.health());
         mainCharacter.setMana(mainCharacterRequestDto.mana());
         mainCharacter.setCreatedUser(user);
+
+        if (Objects.nonNull(mainCharacterRequestDto.rarity())) {
+            mainCharacter.setRarity(mainCharacterRequestDto.rarity());
+        }
+
+        if (Objects.nonNull(mainCharacterRequestDto.theme())) {
+            mainCharacter.setTheme(mainCharacterRequestDto.theme());
+        }
+
         cardMapper.insertMainCharacter(mainCharacter);
         return mainCharacter;
     }

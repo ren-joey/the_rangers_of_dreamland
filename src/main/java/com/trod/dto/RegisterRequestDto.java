@@ -1,11 +1,10 @@
 package com.trod.dto;
 
-import com.trod.constant.RoleEnum;
+import com.trod.enums.RoleEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import org.springframework.context.annotation.Profile;
 
 public record RegisterRequestDto (
         @NotBlank(message = "Username is required")

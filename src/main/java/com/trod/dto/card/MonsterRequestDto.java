@@ -1,6 +1,6 @@
 package com.trod.dto.card;
 
-import com.trod.constant.RarityEnum;
+import com.trod.enums.RarityEnum;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;

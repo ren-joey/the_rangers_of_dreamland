@@ -1,6 +1,5 @@
 package com.trod.app;
 
-import com.trod.post.processor.DotenvPostProcessor;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,7 +13,8 @@ import org.springframework.context.annotation.ComponentScan;
 public class TrodApplication  {
 
 	public static void main(String[] args) {
-		DotenvPostProcessor.loadEnv();
+		// 讀取 .env 檔案時使用
+//		DotenvPostProcessor.loadEnv();
 
 		SpringApplication.run(TrodApplication.class, args);
 	}

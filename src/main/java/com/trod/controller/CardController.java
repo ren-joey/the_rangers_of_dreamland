@@ -1,6 +1,6 @@
 package com.trod.controller;
 
-import com.trod.constant.RoleEnum;
+import com.trod.enums.RoleEnum;
 import com.trod.dto.card.MonsterRequestDto;
 import com.trod.dto.card.MonsterResponseDto;
 import com.trod.dto.main.character.MainCharacterRequestDto;
@@ -11,10 +11,7 @@ import com.trod.entity.User;
 import com.trod.service.AuthService;
 import com.trod.service.CardService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/card")
@@ -23,8 +20,16 @@ public class CardController {
 
     private final AuthService authService;
     private final CardService cardService;
+    
+    @GetMapping("/monster/{uuid}")
+    public MonsterResponseDto getMonster(
+        @PathVariable String uuid
+    ) {
+        Monster monster = cardService.getMonster(uuid);
+        return MonsterResponseDto.convert(monster);
+    }
 
-    @PostMapping("/add/monster")
+    @PostMapping("/monster")
     public MonsterResponseDto addMonsterCard(
         @RequestBody MonsterRequestDto monsterRequestDto
     ) {
@@ -33,7 +38,15 @@ public class CardController {
         return MonsterResponseDto.convert(monster);
     }
 
-    @PostMapping("/add/mainCharacter")
+    @GetMapping("/mainCharacter/{uuid}")
+    public MainCharacterResponseDto getMainCharacter(
+        @PathVariable String uuid
+    ) {
+        MainCharacter mainCharacter = cardService.getMainCharacterById(uuid);
+        return MainCharacterResponseDto.convert(mainCharacter);
+    }
+
+    @PostMapping("/mainCharacter")
     public MainCharacterResponseDto addMainCharacter (
         @RequestBody MainCharacterRequestDto mainCharacterRequestDto
     ) {

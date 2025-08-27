@@ -1,5 +1,6 @@
 package com.trod.security;
 
+import com.trod.config.JwtConfig;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ClaimsBuilder;
 import io.jsonwebtoken.Jwts;
@@ -12,8 +13,14 @@ import java.util.Date;
 
 @Component
 public class JwtUtil {
-    private final SecretKey key = Keys
-            .hmacShaKeyFor(System.getProperty("JWT_SECRET").getBytes(StandardCharsets.UTF_8));
+
+    private final SecretKey key;
+    private final JwtConfig jwtConfig;
+
+    public JwtUtil(JwtConfig jwtConfig) {
+        this.key = Keys.hmacShaKeyFor(jwtConfig.getSecret().getBytes(StandardCharsets.UTF_8));
+        this.jwtConfig = jwtConfig;
+    }
 
     public String extractUsername(String token) {
         return extractUsername(token, extractAllClaims(token));
@@ -32,14 +39,11 @@ public class JwtUtil {
     }
 
     public String generateToken(String username) {
-        // 1 day in milliseconds
-        long EXPIRATION_TIME = Long.parseLong(System.getProperty("JWT_EXPIRATION_TIME"));
-
         ClaimsBuilder claims = Jwts.claims();
         claims.add("sub", username);
         claims.add("role", "user");
         claims.add("iat", new Date());
-        claims.add("exp", new Date(System.currentTimeMillis() + EXPIRATION_TIME));
+        claims.add("exp", new Date(System.currentTimeMillis() + jwtConfig.getExpirationTime()));
 
         return Jwts.builder()
                 .claims()

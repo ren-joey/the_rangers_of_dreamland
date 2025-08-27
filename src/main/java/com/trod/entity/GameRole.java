@@ -1,6 +1,6 @@
 package com.trod.entity;
 
-import com.trod.constant.RoleEnum;
+import com.trod.enums.RoleEnum;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

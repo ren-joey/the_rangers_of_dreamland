@@ -1,11 +1,13 @@
 package com.trod.filter;
 
+import com.trod.config.JwtConfig;
 import com.trod.security.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,13 +20,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 @Component
+@RequiredArgsConstructor
 public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-
-    public JwtRequestFilter(JwtUtil jwtUtil) {
-        this.jwtUtil = jwtUtil;
-    }
+    private final JwtConfig jwtConfig;
 
     @Override
     protected void doFilterInternal(
@@ -65,7 +65,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private String extractJwtFromCookie(HttpServletRequest request) {
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
-                if (cookie.getName().equals(System.getProperty("JWT_KEY_NAME"))) {
+                if (cookie.getName().equals(jwtConfig.getKeyName())) {
                     return cookie.getValue();
                 }
             }

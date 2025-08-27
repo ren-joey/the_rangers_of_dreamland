@@ -1,6 +1,6 @@
 package com.trod.controller;
 
-import com.trod.constant.RoleEnum;
+import com.trod.enums.RoleEnum;
 import com.trod.dto.LoginRequestDto;
 import com.trod.dto.RegisterRequestDto;
 import com.trod.dto.UserResponseDto;

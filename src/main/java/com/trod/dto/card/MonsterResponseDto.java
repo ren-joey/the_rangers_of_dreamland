@@ -1,6 +1,6 @@
 package com.trod.dto.card;
 
-import com.trod.constant.RarityEnum;
+import com.trod.enums.RarityEnum;
 import com.trod.entity.Monster;
 
 public record MonsterResponseDto (

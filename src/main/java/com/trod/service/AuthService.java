@@ -1,9 +1,9 @@
 package com.trod.service;
 
-import com.trod.constant.RoleEnum;
+import com.trod.config.JwtConfig;
+import com.trod.enums.RoleEnum;
 import com.trod.dto.LoginRequestDto;
 import com.trod.dto.RegisterRequestDto;
-import com.trod.dto.UserResponseDto;
 import com.trod.entity.GameRole;
 import com.trod.entity.User;
 import com.trod.mapper.GameRoleMapper;
@@ -32,6 +32,7 @@ public class AuthService {
 
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final JwtConfig jwtConfig;
     private final JwtUtil jwtUtil;
     private final GameRoleMapper gameRoleMapper;
 
@@ -116,7 +117,7 @@ public class AuthService {
         if (user.isEmpty()) {
             throw new AuthenticationCredentialsNotFoundException("You are not logged in");
         }
-        Cookie cookie = new Cookie(System.getProperty("JWT_KEY_NAME"), "");
+        Cookie cookie = new Cookie(jwtConfig.getKeyName(), "");
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/");
@@ -125,7 +126,7 @@ public class AuthService {
     }
 
     public void addJwtToCookie(HttpServletResponse response, String jwt) {
-        Cookie cookie = new Cookie(System.getProperty("JWT_KEY_NAME"), jwt);
+        Cookie cookie = new Cookie(jwtConfig.getKeyName(), jwt);
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/");

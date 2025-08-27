@@ -1,8 +1,11 @@
 package com.trod.entity.abstractentity;
 
-import com.trod.constant.RarityEnum;
-import com.trod.constant.ThemeEnum;
-import jakarta.persistence.*;
+import com.trod.enums.RarityEnum;
+import com.trod.enums.ThemeEnum;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +15,7 @@ import lombok.Setter;
 public abstract class Unit extends UUIDEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private RarityEnum rarity;
+    private RarityEnum rarity = RarityEnum.NORMAL;
 
     @Column(nullable = false)
     private String name;
@@ -20,6 +23,7 @@ public abstract class Unit extends UUIDEntity {
     @Column(nullable = false)
     private String description;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ThemeEnum theme;
+    private ThemeEnum theme = ThemeEnum.VANILLA;
 }

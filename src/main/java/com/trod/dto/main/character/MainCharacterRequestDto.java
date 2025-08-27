@@ -1,6 +1,7 @@
 package com.trod.dto.main.character;
 
-import com.trod.constant.RarityEnum;
+import com.trod.enums.RarityEnum;
+import com.trod.enums.ThemeEnum;
 
 public record MainCharacterRequestDto (
         String name,
@@ -8,6 +9,7 @@ public record MainCharacterRequestDto (
         RarityEnum rarity,
         Integer cost,
         Integer health,
-        Integer mana
+        Integer mana,
+        ThemeEnum theme
 ) {
 }

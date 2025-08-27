@@ -2,6 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.trod.mapper.CardMapper">
+    <select id="getMonster" resultType="com.trod.entity.Monster">
+        SELECT * FROM monster WHERE uuid = #{uuid}
+    </select>
+
+    <select id="getMainCharacter" resultType="com.trod.entity.MainCharacter">
+        SELECT * FROM main_character WHERE uuid = #{uuid}
+    </select>
+
     <insert id="insertMonsterCard" parameterType="com.trod.entity.Monster" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
         INSERT INTO monster
             (
@@ -47,6 +55,7 @@
              cost,
              health,
              mana,
+             theme,
              created_time,
              created_user_id,
              updated_time,
@@ -61,6 +70,7 @@
              #{cost},
              #{health},
              #{mana},
+             #{theme},
              <include refid="com.trod.mapper.Common.currentWithMilliSeconds"/>,
              #{createdUser.id},
              <include refid="com.trod.mapper.Common.currentWithMilliSeconds"/>,

@@ -1,6 +1,6 @@
 package com.trod.entity;
 
-import com.trod.constant.PropertyTypeEnum;
+import com.trod.enums.PropertyTypeEnum;
 import com.trod.entity.abstractentity.IdentityEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
